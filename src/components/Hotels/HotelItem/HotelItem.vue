@@ -7,18 +7,31 @@
       <h3>{{ name }}</h3>
       <p>{{ address }}</p>
       <span>({{ rating }})</span>
-      <button>
+      <button @click="handleSelectHotel(name)">
         <span>Book now</span>
       </button>
     </div>
   </li>
+  <HotelBookingForm
+    :openHotelBooking="openHotelBooking"
+    :selectedHotel="selectedHotel"
+    :handleCloseHotelBookingForm="handleCloseHotelBookingForm"
+  />
 </template>
 
 <script setup>
-import { inject } from 'vue'
+import { inject, ref } from 'vue'
 import logo from '@/assets/logo.svg'
+import HotelBookingForm from '@/components/Forms/HotelBookingForm/HotelBookingForm.vue'
 
 const data = inject('hotels')
+const openHotelBooking = ref(false)
+const selectedHotel = ref(null)
+const handleSelectHotel = (hotelName) => {
+  selectedHotel.value = hotelName
+  openHotelBooking.value = true
+}
+const handleCloseHotelBookingForm = () => (openHotelBooking.value = false)
 </script>
 
 <style scoped>
