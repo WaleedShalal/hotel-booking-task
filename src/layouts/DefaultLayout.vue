@@ -20,4 +20,8 @@ import TheFooter from '@/components/TheFooter/TheFooter.vue'
   grid-template-rows: auto 1fr auto;
   place-items: center;
 }
+.default__layout main {
+  width: 80vw;
+  margin-inline: auto;
+}
 </style>
