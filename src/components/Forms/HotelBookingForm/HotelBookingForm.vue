@@ -1,7 +1,7 @@
 <template>
   <HotelBookingSlot v-if="props.openHotelBooking">
     <template #bookingForm>
-      <h3>{{ props.selectedHotel }}</h3>
+      <h3>{{ props.selectedHotel.name }}</h3>
       <form @submit.prevent="handleSubmitUserBookingInfo">
         <div>
           <label for="user-name">User Name:</label>
@@ -29,27 +29,54 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { ref } from 'vue'
 import HotelBookingSlot from '@/components/Slots/HotelBookingSlot.vue'
 
 const props = defineProps(['openHotelBooking', 'selectedHotel', 'handleCloseHotelBookingForm'])
-const userInfo = reactive({
+const userInfo = ref({
   userName: '',
   userEmail: '',
-  userPhoneNumber: ''
+  userPhoneNumber: '',
+  bookedHotels: []
 })
 
 const handleSubmitUserBookingInfo = () => {
-  const { userName, userEmail, userPhoneNumber } = userInfo
-  if (userName && userEmail && userPhoneNumber) {
-    const bookingUsersInfo = JSON.parse(localStorage.getItem('hotelBookingInfo'))
-    const updatedUsersInfo = bookingUsersInfo
-      ? [...bookingUsersInfo, { ...userInfo }]
-      : [{ ...userInfo }]
-
-    localStorage.setItem('hotelBookingInfo', JSON.stringify(updatedUsersInfo))
-    props.handleCloseHotelBookingForm()
+  const { userName, userEmail, userPhoneNumber } = userInfo.value
+  if (!userName || !userEmail || !userPhoneNumber) return
+  let updatedUsersInfo
+  const bookingUsersInfo = JSON.parse(localStorage.getItem('userHotelBookingInfo'))
+  if (!bookingUsersInfo)
+    updatedUsersInfo = [{ ...userInfo.value, bookedHotels: [props.selectedHotel] }]
+  else {
+    const recordedUserInfo = bookingUsersInfo.find((userInfo) => userInfo.userEmail === userEmail)
+    if (!recordedUserInfo) {
+      updatedUsersInfo = [
+        ...bookingUsersInfo,
+        { ...userInfo.value, bookedHotels: [props.selectedHotel] }
+      ]
+    } else {
+      const recordedUserInfoIndex = bookingUsersInfo.findIndex(
+        (userInfo) => userInfo.userEmail === userEmail
+      )
+      const bookingUsersInfoCopy = [...bookingUsersInfo]
+      bookingUsersInfoCopy.splice(recordedUserInfoIndex, 1),
+        (updatedUsersInfo = [
+          ...bookingUsersInfoCopy,
+          {
+            ...userInfo.value,
+            bookedHotels: [...recordedUserInfo.bookedHotels, props.selectedHotel]
+          }
+        ])
+    }
   }
+  localStorage.setItem('userHotelBookingInfo', JSON.stringify(updatedUsersInfo))
+  userInfo.value = {
+    userName: '',
+    userEmail: '',
+    userPhoneNumber: '',
+    bookedHotels: []
+  }
+  props.handleCloseHotelBookingForm()
 }
 </script>
 

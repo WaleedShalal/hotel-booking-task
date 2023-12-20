@@ -1,13 +1,13 @@
 <template>
-  <li v-for="{ name, address, rating } in data" :key="name">
+  <li v-for="({ name, address, rating }, i) in data" :key="name">
     <figure>
       <img :src="logo" alt="hotel-logo" />
     </figure>
     <div class="hotel__description">
       <h3>{{ name }}</h3>
       <p>{{ address }}</p>
-      <span>({{ rating }})</span>
-      <button @click="handleSelectHotel(name)">
+      <span>⭐ ({{ rating }})</span>
+      <button @click="handleSelectHotel(data[i])">
         <span>Book now</span>
       </button>
     </div>
@@ -27,8 +27,8 @@ import HotelBookingForm from '@/components/Forms/HotelBookingForm/HotelBookingFo
 const data = inject('hotels')
 const openHotelBooking = ref(false)
 const selectedHotel = ref(null)
-const handleSelectHotel = (hotelName) => {
-  selectedHotel.value = hotelName
+const handleSelectHotel = (hotel) => {
+  selectedHotel.value = hotel
   openHotelBooking.value = true
 }
 const handleCloseHotelBookingForm = () => (openHotelBooking.value = false)
