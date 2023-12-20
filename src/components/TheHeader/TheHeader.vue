@@ -30,11 +30,13 @@ const navs = [
 <style scoped>
 header {
   width: 100%;
+  background-color: hsl(var(--black));
 }
 header > div {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 1rem 3rem;
 }
 header figure {
   width: 5rem;
@@ -58,5 +60,11 @@ header nav {
 .nav__list > li a {
   text-decoration: none;
   font-size: 3rem;
+  color: hsla(var(--white), 0.5);
+  font-weight: bold;
+}
+.nav__list > li a.router-link-exact-active {
+  text-decoration: underline;
+  color: hsl(var(--white));
 }
 </style>
