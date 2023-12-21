@@ -4,7 +4,9 @@
       <div class="hotel__bookingForm" v-if="$slots.bookingForm">
         <slot name="bookingForm"></slot>
       </div>
-      <slot name="hotelGreetings" v-if="$slots.hotelGreetings"></slot>
+      <div class="greetings">
+        <slot name="hotelGreetings" v-if="$slots.hotelGreetings"> </slot>
+      </div>
     </dialog>
   </teleport>
 </template>
@@ -14,7 +16,6 @@
 <style>
 dialog {
   width: 50%;
-  min-height: 30rem;
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -31,7 +32,8 @@ dialog {
   flex-direction: column;
   row-gap: 2rem;
 }
-.hotel__bookingForm h3 {
+.hotel__bookingForm h3,
+.greetings h3 {
   text-align: center;
   font-size: 3rem;
   color: red;
@@ -64,13 +66,15 @@ dialog {
   border-radius: 0.5rem;
   font-size: 2rem;
 }
-.hotel__bookingForm .form__buttons {
+.hotel__bookingForm .form__buttons,
+.greetings .greetings__button {
   display: flex;
   justify-content: flex-end;
   column-gap: 1rem;
   margin-block-start: 2rem;
 }
-.hotel__bookingForm .form__buttons button {
+.hotel__bookingForm .form__buttons button,
+.greetings__button button {
   background-color: hsl(var(--white));
   border: 1px solid hsl(var(--argent));
   border-radius: 0.3rem;
@@ -78,10 +82,12 @@ dialog {
   cursor: pointer;
   transition: all 250ms linear;
 }
-.hotel__bookingForm .form__buttons button:first-child {
+.hotel__bookingForm .form__buttons button:first-child,
+.greetings__button button {
   color: hsl(var(--red));
 }
-.hotel__bookingForm .form__buttons button:first-child:hover {
+.hotel__bookingForm .form__buttons button:first-child:hover,
+.greetings__button button:hover {
   color: hsl(var(--white));
   background-color: hsl(var(--red));
 }

@@ -1,6 +1,6 @@
 <template>
-  <HotelBookingSlot v-if="props.openHotelBooking">
-    <template #bookingForm>
+  <HotelBookingSlot v-if="props.openHotelBooking || openGreetings">
+    <template #bookingForm v-if="props.openHotelBooking">
       <h3>{{ props.selectedHotel.name }}</h3>
       <form @submit.prevent="handleSubmitUserBookingInfo">
         <div>
@@ -25,6 +25,14 @@
         </div>
       </form>
     </template>
+    <template #hotelGreetings v-if="openGreetings">
+      <h3>Thank you for booking with us</h3>
+      <div class="greetings__button">
+        <button @click="openGreetings = false">
+          <span>Cancel</span>
+        </button>
+      </div>
+    </template>
   </HotelBookingSlot>
 </template>
 
@@ -39,6 +47,7 @@ const userInfo = ref({
   userPhoneNumber: '',
   bookedHotels: []
 })
+const openGreetings = ref(false)
 
 const handleSubmitUserBookingInfo = () => {
   const { userName, userEmail, userPhoneNumber } = userInfo.value
@@ -68,6 +77,8 @@ const handleSubmitUserBookingInfo = () => {
           }
         ])
     }
+    openGreetings.value = true
+    console.log(openGreetings.value)
   }
   localStorage.setItem('userHotelBookingInfo', JSON.stringify(updatedUsersInfo))
   userInfo.value = {

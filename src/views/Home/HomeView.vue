@@ -1,13 +1,13 @@
 <template>
   <div class="home__page">
-    <HotelList :data="hotels" />
+    <HotelList />
   </div>
 </template>
 
 <script setup>
 import { ref, provide } from 'vue'
 import { hotelsData } from './helper'
-import HotelList from '../../components/Hotels/HotelsList/HotelsList.vue'
+import HotelList from '@/components/Hotels/HotelsList/HotelsList.vue'
 
 const hotels = ref(hotelsData)
 provide('hotels', hotels)

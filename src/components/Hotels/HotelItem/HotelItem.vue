@@ -7,8 +7,11 @@
       <h3>{{ name }}</h3>
       <p>{{ address }}</p>
       <span>⭐ ({{ rating }})</span>
-      <button @click="handleSelectHotel(data[i])">
+      <button @click="handleSelectHotel(data[i])" v-if="path === '/'">
         <span>Book now</span>
+      </button>
+      <button @click="handleCancelUserBookedHotel(data[i])" v-else>
+        <span>Cancel book</span>
       </button>
     </div>
   </li>
@@ -21,13 +24,20 @@
 
 <script setup>
 import { inject, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import logo from '@/assets/logo.svg'
 import HotelBookingForm from '@/components/Forms/HotelBookingForm/HotelBookingForm.vue'
 
+const { path } = useRoute()
 const data = inject('hotels')
+const handleCancelUserBookedHotel = inject('handleCancelUserBookedHotel')
 const openHotelBooking = ref(false)
 const selectedHotel = ref(null)
 const handleSelectHotel = (hotel) => {
+  selectedHotel.value = hotel
+  openHotelBooking.value = true
+}
+const handleCancelSelectHotel = (hotel) => {
   selectedHotel.value = hotel
   openHotelBooking.value = true
 }
