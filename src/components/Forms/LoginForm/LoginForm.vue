@@ -16,13 +16,15 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
 const router = useRouter()
+const store = useStore()
 const userEmail = ref('')
 
 const handleLogin = () => {
   if (!userEmail.value) return
-  localStorage.setItem('userBookedEmail', userEmail.value)
+  store.dispatch('auth/setUserEmail', { userEmail: userEmail.value })
   router.push({ name: 'bookedHotels' })
 }
 </script>
