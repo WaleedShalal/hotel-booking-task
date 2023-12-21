@@ -12,7 +12,17 @@ const router = createRouter({
     {
       path: '/booked-hotels',
       name: 'bookedHotels',
+      beforeEnter: (to, from, next) => {
+        const loggedUserEmail = localStorage.getItem('userBookedEmail')
+        if (!loggedUserEmail) next({ name: 'login' })
+        else next()
+      },
       component: () => import('@/views/BookedHotelsView.vue')
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/LoginView.vue')
     }
   ]
 })
