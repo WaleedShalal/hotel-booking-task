@@ -1,5 +1,5 @@
 <template>
-  <li v-for="({ name, address, rating }, i) in data" :key="name">
+  <li v-for="({ name, address, rating }, i) in props.data" :key="name">
     <figure>
       <img :src="logo" alt="hotel-logo" />
     </figure>
@@ -18,30 +18,25 @@
   <HotelBookingForm
     :openHotelBooking="openHotelBooking"
     :selectedHotel="selectedHotel"
-    :handleCloseHotelBookingForm="handleCloseHotelBookingForm"
+    :handleCloseHotelBookingForm="() => (openHotelBooking = false)"
   />
 </template>
 
 <script setup>
-import { inject, ref } from 'vue'
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import logo from '@/assets/logo.svg'
 import HotelBookingForm from '@/components/Forms/HotelBookingForm/HotelBookingForm.vue'
 
 const { path } = useRoute()
-const data = inject('hotels')
-const handleCancelUserBookedHotel = inject('handleCancelUserBookedHotel')
+const props = defineProps(['data', 'handleCancelUserBookedHotel'])
 const openHotelBooking = ref(false)
 const selectedHotel = ref(null)
+
 const handleSelectHotel = (hotel) => {
   selectedHotel.value = hotel
   openHotelBooking.value = true
 }
-const handleCancelSelectHotel = (hotel) => {
-  selectedHotel.value = hotel
-  openHotelBooking.value = true
-}
-const handleCloseHotelBookingForm = () => (openHotelBooking.value = false)
 </script>
 
 <style scoped>
@@ -55,7 +50,7 @@ li {
 }
 li figure {
   width: 5rem;
-  heigth: 5rem;
+  height: 5rem;
   margin-block-end: 0;
 }
 .hotel__description {

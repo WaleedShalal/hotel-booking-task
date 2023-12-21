@@ -1,11 +1,13 @@
 <template>
   <ul class="hotels__list">
-    <HotelItem />
+    <HotelItem :data="props.data" :handleCancelUserBookedHotel="handleCancelUserBookedHotel" />
   </ul>
 </template>
 
 <script setup>
 import HotelItem from '../HotelItem/HotelItem.vue'
+
+const props = defineProps(['data', 'handleCancelUserBookedHotel'])
 </script>
 
 <style scoped>

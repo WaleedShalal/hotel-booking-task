@@ -12,9 +12,9 @@ export const LoginModule = {
     setUserEmail: (state, { userEmail }) => {
       state.userEmail = userEmail
       localStorage.setItem('userBookedEmail', userEmail)
-    },
-    getters: {
-      userEmail: (state) => state.userEmail
     }
+  },
+  getters: {
+    userEmail: ({ userEmail }) => userEmail
   }
 }

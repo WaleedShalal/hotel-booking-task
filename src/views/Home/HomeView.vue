@@ -1,16 +1,16 @@
 <template>
   <div class="home__page">
-    <HotelList />
+    <HotelList :data="data" />
   </div>
 </template>
 
 <script setup>
-import { ref, provide } from 'vue'
-import { hotelsData } from './helper'
+import { useStore } from 'vuex'
 import HotelList from '@/components/Hotels/HotelsList/HotelsList.vue'
 
-const hotels = ref(hotelsData)
-provide('hotels', hotels)
+const store = useStore()
+store.dispatch('hotels/setHotels')
+const data = store.getters['hotels/hotelsList']
 </script>
 
 <style scoped>

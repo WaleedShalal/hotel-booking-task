@@ -38,6 +38,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useStore } from 'vuex'
 import HotelBookingSlot from '@/components/Slots/HotelBookingSlot.vue'
 
 const props = defineProps(['openHotelBooking', 'selectedHotel', 'handleCloseHotelBookingForm'])
@@ -48,15 +49,18 @@ const userInfo = ref({
   bookedHotels: []
 })
 const openGreetings = ref(false)
+const store = useStore()
 
 const handleSubmitUserBookingInfo = () => {
   const { userName, userEmail, userPhoneNumber } = userInfo.value
   if (!userName || !userEmail || !userPhoneNumber) return
+  openGreetings.value = true
+  store.dispatch('hotels/getUsersHotelBookingInfo')
+  const bookingUsersInfo = store.getters['hotels/usersHotelBookingInfo']
   let updatedUsersInfo
-  const bookingUsersInfo = JSON.parse(localStorage.getItem('userHotelBookingInfo'))
-  if (!bookingUsersInfo)
+  if (!bookingUsersInfo) {
     updatedUsersInfo = [{ ...userInfo.value, bookedHotels: [props.selectedHotel] }]
-  else {
+  } else {
     const recordedUserInfo = bookingUsersInfo.find((userInfo) => userInfo.userEmail === userEmail)
     if (!recordedUserInfo) {
       updatedUsersInfo = [
@@ -64,23 +68,22 @@ const handleSubmitUserBookingInfo = () => {
         { ...userInfo.value, bookedHotels: [props.selectedHotel] }
       ]
     } else {
-      const recordedUserInfoIndex = bookingUsersInfo.findIndex(
-        (userInfo) => userInfo.userEmail === userEmail
+      const otherdBookingUsersInfo = bookingUsersInfo.filter(
+        (userInfo) => userInfo.userEmail !== userEmail
       )
-      const bookingUsersInfoCopy = [...bookingUsersInfo]
-      bookingUsersInfoCopy.splice(recordedUserInfoIndex, 1),
-        (updatedUsersInfo = [
-          ...bookingUsersInfoCopy,
-          {
-            ...userInfo.value,
-            bookedHotels: [...recordedUserInfo.bookedHotels, props.selectedHotel]
-          }
-        ])
+      const updatedRecordedUserInfoBookedHotels = recordedUserInfo.bookedHotels.filter(
+        (bookedHotel) => bookedHotel.name !== props.selectedHotel.name
+      )
+      updatedUsersInfo = [
+        ...otherdBookingUsersInfo,
+        {
+          ...userInfo.value,
+          bookedHotels: [...updatedRecordedUserInfoBookedHotels, props.selectedHotel]
+        }
+      ]
     }
-    openGreetings.value = true
-    console.log(openGreetings.value)
   }
-  localStorage.setItem('userHotelBookingInfo', JSON.stringify(updatedUsersInfo))
+  store.dispatch('hotels/setUsersHotelBookingInfo', { value: updatedUsersInfo })
   userInfo.value = {
     userName: '',
     userEmail: '',
